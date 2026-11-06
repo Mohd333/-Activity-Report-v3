@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مولد تقرير النشاط الطلابي</title>
+<title>مولد تقرير البرامج والأنشطة المدرسية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Baloo+Bhaijaan+2:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -19,7 +19,7 @@
   .card h2 { font-size: 18px; margin: 0 0 12px; color: #1e3a7a; }
   .card h3 { font-size: 15px; margin: 16px 0 6px; color: #1e3a7a; border-top: 1px solid #e2e8f0; padding-top: 12px; }
   label { display: block; font-size: 14px; margin: 10px 0 4px; font-weight: 500; }
-  input[type=text], select { width: 100%; padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; font-size: 15px; background: #fff; }
+  input[type=text], input[type=date], select { width: 100%; padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; font-size: 15px; background: #fff; }
   input[type=file] { font: inherit; font-size: 13px; width: 100%; }
   .slots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .slot { border: 1px dashed #94a3b8; border-radius: 10px; padding: 8px; font-size: 13px; }
@@ -30,28 +30,35 @@
   button.gray { background: #475569; }
   button:disabled { opacity: .5; cursor: not-allowed; }
   .hint { font-size: 12px; color: #64748b; margin-top: 8px; line-height: 1.6; }
+  .check { display: flex; align-items: center; gap: 8px; margin: 10px 0 4px; font-size: 14px; font-weight: 500; }
+  .check input { width: 18px; height: 18px; }
   #preview { width: 100%; height: auto; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; display: block; }
   .hidden { display: none; }
 </style>
 </head>
 <body>
 <header class="top">
-  <h1>مولد تقرير الأنشطة والبرامج المدرسية</h1>
-  <p>صورة مربعة 20×20 سم - تُعالج داخل جهازك ولا تُرفع إلى أي مكان - تصميم أبو جنى الإصدار 3.0</p>
+  <h1>مولد تقرير البرامج والأنشطة المدرسية</h1>
+  <p>صورة مربعة 20×20 سم بدقة 300 نقطة/بوصة - تُعالج داخل جهازك ولا تُرفع إلى أي مكان - تصميم أبو جنى - الإصدار 6.0</p>
 </header>
 
 <div class="wrap">
   <section class="card">
-    <h2>بيانات النشاط أو البرنامج</h2>
+    <h2>بيانات النشاط</h2>
 
     <label for="dept">نوع التقرير</label>
-    <select id="dept">
-      <option value="النشاط الطلابي">النشاط الطلابي</option>
-      <option value="التوجيه الطلابي">التوجيه الطلابي</option>
-      <option value="شؤون الطلاب">شؤون الطلاب</option>
-      <option value="أخرى">أخرى</option>
-    </select>
-    <input type="text" id="deptOther" class="hidden" placeholder="اكتب نوع التقرير، مثال: مساحة ابتكار، جماعة النظام" style="margin-top:8px">
+    <select id="dept"></select>
+    <input type="text" id="deptOther" class="hidden" placeholder="اكتب نوع التقرير، مثال: صعوبات التعلم" style="margin-top:8px">
+
+    <label for="newDept">إضافة نوع تقرير جديد إلى القائمة</label>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="newDept" placeholder="مثال: صعوبات التعلم" style="flex:1">
+      <button id="btnAddDept" class="alt" style="flex:0 0 auto">إضافة</button>
+    </div>
+    <div class="btns" style="margin-top:8px">
+      <button id="btnDelDept" class="gray">حذف النوع المختار (المضاف)</button>
+    </div>
+    <p class="hint">الأنواع المضافة تُحفظ في المتصفح وتظهر في القائمة. الأنواع الأساسية و"أخرى" لا تُحذف. استخدم "أخرى" للتقارير غير المتكررة.</p>
 
     <label for="color">لون التقرير</label>
     <select id="color">
@@ -62,13 +69,23 @@
       <option value="purple">بنفسجي</option>
       <option value="red">أحمر</option>
       <option value="teal">تركوازي</option>
+      <option value="brown">بني</option>
+      <option value="navy">كحلي</option>
+      <option value="gray">رمادي</option>
+      <option value="fuchsia">فوشي</option>
     </select>
 
-    <label for="actName">اسم النشاط (يُستخدم اسماً للملف عند الحفظ)</label>
+    <label for="actName">اسم النشاط (يُستخدم اسماً للملف عند التحميل)</label>
     <input type="text" id="actName" placeholder="مثال: يوم اليتيم">
 
     <label for="desc">نبذة عن النشاط (تظهر في حدود سطرين)</label>
     <input type="text" id="desc" placeholder="مثال: نشاط تفاعلي يهدف إلى غرس قيم التعاون لدى الطلاب بمشاركة جميع طلاب الصف الثالث وأولياء الأمور">
+
+    <div class="check">
+      <input type="checkbox" id="showDate">
+      <label for="showDate" style="margin:0">إظهار تاريخ التقرير في التذليل</label>
+    </div>
+    <input type="date" id="reportDate" class="hidden">
 
     <h3>بيانات الترويسة والتذليل (قابلة للتعديل)</h3>
     <label for="school">اسم المدرسة</label>
@@ -81,9 +98,10 @@
     <input type="text" id="year" value="1448هـ">
 
     <h3>الصور والشعار</h3>
-    <label for="logoIn">شعار وزارة التعليم</label>
+    <label for="logoIn">شعار وزارة التعليم (مرفق افتراضياً)</label>
     <input type="file" id="logoIn" accept="image/*">
-    <p class="hint" id="logoNote">يُحفظ الشعار في المتصفح ولا يُفقد عند تحديث الصفحة.</p>
+    <p class="hint" id="logoNote">شعار الوزارة الافتراضي مرفق - في حال عدم ظهوره قم برفع الشعار على هذا الجهاز، وسيُحفظ في المتصفح.</p>
+    <div class="btns" style="margin-top:0"><button id="btnResetLogo" class="gray">استعادة الشعار الافتراضي</button></div>
 
     <label>الصور الأربع</label>
     <div class="slots">
@@ -99,7 +117,15 @@
       <button id="btnPdf" class="gray">تحميل PDF</button>
       <button id="btnShare" class="alt">مشاركة (واتساب)</button>
     </div>
-    <p class="hint">على الجوال: زر "مشاركة" يفتح قائمة المشاركة في الجهاز، واختر واتساب. على الحاسوب: يتم التنزيل ثم الإرسال من واتساب ويب، في حال لم تتم المشاركة المباشرة.</p>
+    <p class="hint">على الجوال: زر "مشاركة" يفتح قائمة المشاركة في الجهاز، واختر واتساب. على الحاسوب: يتم التنزيل ثم الإرسال من واتساب ويب.</p>
+
+    <h3>ملف المشروع (للحفظ، والاستعادة، والتعديل)</h3>
+    <div class="btns" style="margin-top:0">
+      <button id="btnExportProj" class="gray">تصدير المشروع</button>
+      <button id="btnImportProj" class="alt">استيراد مشروع</button>
+    </div>
+    <input type="file" id="projIn" accept=".json,application/json" class="hidden">
+    <p class="hint">"تصدير المشروع" ينشئ ملفاً واحداً يحتوي البيانات والصور والشعار، احفظه على جهازك أو ارفعه على الدرايف. ولاستعادة التقرير وتعديله من أي جهاز، اضغط "استيراد مشروع" واختر الملف.</p>
   </section>
 
   <section class="card">
@@ -120,20 +146,34 @@ const SETTINGS = {
   descLines: 2,
   title: "من أنشطة وبرامج المدرسة ..."
 };
+
+// شعار وزارة التعليم الافتراضي: ملف logo.png مرفوع في نفس مجلد الأداة على GitHub
+// يُقص تلقائياً من الحواف الفارغة
+const DEFAULT_LOGO_URL = "logo.png";
+
 const STORE_KEY = "activityReportData_v1";
+const LOGO_KEY = STORE_KEY + "_logo";
+const DEFAULT_DEPTS = ["النشاط الطلابي", "التوجيه الطلابي", "شؤون الطلاب", "جماعة النظام", "استراتيجيات تعلم وتدريس", "نشاط رياضي", "النشاط المدرسي"];
+const DEPTS_KEY = STORE_KEY + "_depts";
 
 const COLORS = {
-  blue:   { main: "#1e3a7a", frame: "#1e3a5f", desc: "#1f4e8c" },
-  green:  { main: "#14532d", frame: "#14532d", desc: "#166534" },
-  black:  { main: "#111827", frame: "#111827", desc: "#1f2937" },
-  orange: { main: "#9a3412", frame: "#9a3412", desc: "#b45309" },
-  purple: { main: "#4c1d95", frame: "#4c1d95", desc: "#5b21b6" },
-  red:    { main: "#9f1239", frame: "#9f1239", desc: "#be123c" },
-  teal:   { main: "#115e59", frame: "#115e59", desc: "#0f766e" }
+  blue:    { main: "#1e3a7a", frame: "#1e3a5f", desc: "#1f4e8c" },
+  green:   { main: "#14532d", frame: "#14532d", desc: "#166534" },
+  black:   { main: "#111827", frame: "#111827", desc: "#1f2937" },
+  orange:  { main: "#9a3412", frame: "#9a3412", desc: "#b45309" },
+  purple:  { main: "#4c1d95", frame: "#4c1d95", desc: "#5b21b6" },
+  red:     { main: "#9f1239", frame: "#9f1239", desc: "#be123c" },
+  teal:    { main: "#115e59", frame: "#115e59", desc: "#0f766e" },
+  brown:   { main: "#78350f", frame: "#78350f", desc: "#92400e" },
+  navy:    { main: "#1e1b4b", frame: "#1e1b4b", desc: "#312e81" },
+  gray:    { main: "#374151", frame: "#374151", desc: "#4b5563" },
+  fuchsia: { main: "#86198f", frame: "#86198f", desc: "#a21caf" }
 };
 
-const photos = [null, null, null, null];
+const photos = [null, null, null, null];   // صور للرسم
+const photoData = [null, null, null, null]; // نسخ Base64 للحفظ في ملف المشروع
 let logo = null;
+let logoDataUrl = null;
 const prev = document.getElementById("preview");
 let pending = false;
 
@@ -143,67 +183,133 @@ function palette() {
   return COLORS[$("color").value] || COLORS.blue;
 }
 
+// ---- قائمة أنواع التقارير (الأساسية + المضافة) ----
+function customDepts() {
+  try {
+    const a = JSON.parse(localStorage.getItem(DEPTS_KEY) || "[]");
+    return Array.isArray(a) ? a : [];
+  } catch (e) { return []; }
+}
+
+function rebuildDeptSelect(selected) {
+  const sel = $("dept");
+  const list = [...DEFAULT_DEPTS, ...customDepts().filter(x => !DEFAULT_DEPTS.includes(x) && x !== "أخرى")];
+  sel.innerHTML = "";
+  [...list, "أخرى"].forEach(v => {
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (selected) sel.value = selected;
+}
+
 function deptText() {
   const v = $("dept").value;
   if (v === "أخرى") return $("deptOther").value.trim() || "أخرى";
   return v;
 }
 
+function formatDate(v) {
+  if (!v) return "";
+  const [y, m, d] = v.split("-");
+  return `${y}/${m}/${d}`;
+}
+
 function cfg() {
+  const showDate = $("showDate").checked;
   return {
     tag: deptText(),
     school: $("school").value.trim(),
     admin: $("admin").value.trim(),
-    year: $("year").value.trim()
+    year: $("year").value.trim(),
+    date: showDate ? formatDate($("reportDate").value) : ""
   };
 }
 
+function syncUI() {
+  $("deptOther").classList.toggle("hidden", $("dept").value !== "أخرى");
+  $("reportDate").classList.toggle("hidden", !$("showDate").checked);
+}
+
 // ---- حفظ البيانات واستعادتها ----
-function saveData() {
-  const data = {
+function collectFields() {
+  return {
     dept: $("dept").value,
     deptOther: $("deptOther").value,
     color: $("color").value,
+    showDate: $("showDate").checked,
+    reportDate: $("reportDate").value,
     actName: $("actName").value,
     desc: $("desc").value,
     school: $("school").value,
     admin: $("admin").value,
     year: $("year").value
   };
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+function saveData() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(collectFields())); } catch (e) {}
+}
+
+function applyFields(d) {
+  const dept = d.dept || DEFAULT_DEPTS[0];
+  if (dept !== "أخرى" && !DEFAULT_DEPTS.includes(dept)) {
+    const list = customDepts();
+    if (!list.includes(dept)) {
+      list.push(dept);
+      try { localStorage.setItem(DEPTS_KEY, JSON.stringify(list)); } catch (e) {}
+    }
+  }
+  rebuildDeptSelect(dept);
+  if (d.deptOther !== undefined) $("deptOther").value = d.deptOther;
+  if (d.color !== undefined) $("color").value = d.color;
+  if (d.showDate !== undefined) $("showDate").checked = !!d.showDate;
+  if (d.reportDate !== undefined) $("reportDate").value = d.reportDate;
+  if (d.actName !== undefined) $("actName").value = d.actName;
+  if (d.desc !== undefined) $("desc").value = d.desc;
+  if (d.school !== undefined) $("school").value = d.school;
+  if (d.admin !== undefined) $("admin").value = d.admin;
+  if (d.year !== undefined) $("year").value = d.year;
 }
 
 function restoreData() {
   let data = null;
   try { data = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch (e) {}
   if (!data) return;
-  if (data.dept !== undefined) $("dept").value = data.dept;
-  if (data.deptOther !== undefined) $("deptOther").value = data.deptOther;
-  if (data.color !== undefined) $("color").value = data.color;
-  if (data.actName !== undefined) $("actName").value = data.actName;
-  if (data.desc !== undefined) $("desc").value = data.desc;
-  if (data.school !== undefined) $("school").value = data.school;
-  if (data.admin !== undefined) $("admin").value = data.admin;
-  if (data.year !== undefined) $("year").value = data.year;
+  applyFields(data);
 }
 
 function saveLogo(dataUrl) {
   try {
-    if (dataUrl) localStorage.setItem(STORE_KEY + "_logo", dataUrl);
-    else localStorage.removeItem(STORE_KEY + "_logo");
+    if (dataUrl) localStorage.setItem(LOGO_KEY, dataUrl);
+    else localStorage.removeItem(LOGO_KEY);
   } catch (e) {
     $("logoNote").textContent = "تعذّر حفظ الشعار في المتصفح بسبب حجم الملف، لكن يمكن استخدامه في هذه الجلسة.";
   }
 }
 
-// تصغير الشعار قبل الحفظ لتقليل الحجم
-function shrinkToDataUrl(img, maxW) {
-  const s = Math.min(1, maxW / img.naturalWidth);
+// تصغير الصورة وتحويلها إلى Base64
+function shrinkToDataUrl(img, maxSide, type, quality) {
+  const s = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
   const c = document.createElement("canvas");
   c.width = Math.round(img.naturalWidth * s);
   c.height = Math.round(img.naturalHeight * s);
   c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-  return c.toDataURL("image/png");
+  return c.toDataURL(type || "image/png", quality);
+}
+
+function fileToSmallDataUrl(file, maxSide) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = async () => {
+      try {
+        const img = await loadImage(r.result);
+        res(shrinkToDataUrl(img, maxSide, "image/jpeg", 0.92));
+      } catch (e) { rej(e); }
+    };
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
 }
 
 function loadImage(src) {
@@ -335,7 +441,7 @@ function render(canvas) {
   ctx.font = `bold ${tagSize}px Tajawal, Tahoma, Arial`;
   ctx.fillText(c.tag, 200, 80);
 
-  // ---- العنوان (Baloo Bhaijaan 2 فقط) ----
+  // ---- العنوان ----
   ctx.fillStyle = pal.main;
   ctx.font = `700 ${SETTINGS.titleSize}px "${SETTINGS.titleFont}", Tajawal, Tahoma, Arial`;
   ctx.fillText(SETTINGS.title, 512, 182);
@@ -380,8 +486,17 @@ function render(canvas) {
   ctx.lineWidth = 1.2;
   ctx.beginPath(); ctx.moveTo(75, 955); ctx.lineTo(949, 955); ctx.stroke();
   ctx.fillStyle = "#5f6670";
-  ctx.font = "400 15px Tajawal, Tahoma, Arial";
-  ctx.fillText(`${c.tag} - ${c.school} - العام الدراسي ${c.year}`, 512, 975);
+  let footer = `${c.tag} - ${c.school} - العام الدراسي ${c.year}`;
+  if (c.date) footer += ` - التاريخ ${c.date}`;
+  const fSize = fitFont(ctx, footer, "400", 15, 860);
+  ctx.font = `400 ${fSize}px Tajawal, Tahoma, Arial`;
+  ctx.fillText(footer, 512, 975);
+
+  // ---- إطار التقرير الكامل بلون النوع ----
+  ctx.strokeStyle = pal.frame;
+  ctx.lineWidth = 14;
+  roundPath(ctx, 7, 7, BASE - 14, BASE - 14, 28);
+  ctx.stroke();
 }
 
 function schedule() {
@@ -392,32 +507,132 @@ function schedule() {
 
 // ---- أحداث الإدخال ----
 function onTextChange() {
-  $("deptOther").classList.toggle("hidden", $("dept").value !== "أخرى");
+  syncUI();
   saveData();
   schedule();
 }
-["dept", "deptOther", "color", "actName", "desc", "school", "admin", "year"].forEach(id => {
+["dept", "deptOther", "color", "actName", "desc", "school", "admin", "year", "showDate", "reportDate"].forEach(id => {
   $(id).addEventListener("input", onTextChange);
   $(id).addEventListener("change", onTextChange);
 });
 
+$("btnAddDept").addEventListener("click", () => {
+  const name = $("newDept").value.trim();
+  if (!name) return;
+  if (name !== "أخرى" && !DEFAULT_DEPTS.includes(name)) {
+    const list = customDepts();
+    if (!list.includes(name)) {
+      list.push(name);
+      try { localStorage.setItem(DEPTS_KEY, JSON.stringify(list)); } catch (e) {}
+    }
+  }
+  rebuildDeptSelect(name);
+  $("newDept").value = "";
+  onTextChange();
+});
+
+$("btnDelDept").addEventListener("click", () => {
+  const cur = $("dept").value;
+  const list = customDepts();
+  if (!list.includes(cur)) {
+    alert("يمكن حذف الأنواع المضافة فقط، أما الأنواع الأساسية و'أخرى' فتبقى.");
+    return;
+  }
+  if (!confirm(`حذف نوع التقرير "${cur}" من القائمة؟`)) return;
+  try { localStorage.setItem(DEPTS_KEY, JSON.stringify(list.filter(x => x !== cur))); } catch (e) {}
+  rebuildDeptSelect(DEFAULT_DEPTS[0]);
+  onTextChange();
+});
+
 $("logoIn").addEventListener("change", async e => {
   const f = e.target.files[0];
-  if (!f) { logo = null; saveLogo(null); schedule(); return; }
-  const url = URL.createObjectURL(f);
-  const img = await loadImage(url);
-  logo = trimLogo(img);
-  saveLogo(shrinkToDataUrl(img, 800));
-  schedule();
+  if (!f) {
+    logo = null; logoDataUrl = null; saveLogo(null);
+    applyDefaultLogo();
+    return;
+  }
+  try {
+    const img = await loadImage(URL.createObjectURL(f));
+    logo = trimLogo(img);
+    logoDataUrl = shrinkToDataUrl(img, 800);
+    saveLogo(logoDataUrl);
+    schedule();
+  } catch (err) {
+    $("logoNote").textContent = "تعذّر فتح هذا الملف كشعار، جرّب صورة أخرى بصيغة PNG أو JPG.";
+  }
 });
+
+async function setPhoto(i, dataUrl) {
+  photoData[i] = dataUrl;
+  photos[i] = dataUrl ? await loadImage(dataUrl) : null;
+  schedule();
+}
 
 document.querySelectorAll('input[type=file][data-i]').forEach(inp => {
   inp.addEventListener("change", async e => {
     const i = +e.target.dataset.i;
     const f = e.target.files[0];
-    photos[i] = f ? await loadImage(URL.createObjectURL(f)) : null;
-    schedule();
+    if (!f) { await setPhoto(i, null); return; }
+    const url = await fileToSmallDataUrl(f, 1600);
+    await setPhoto(i, url);
   });
+});
+
+// ---- الشعار الافتراضي من المستودع (logo.png) ----
+function applyDefaultLogo() {
+  logoDataUrl = null;
+  loadImage(DEFAULT_LOGO_URL)
+    .then(img => { logo = trimLogo(img); schedule(); })
+    .catch(() => { logo = null; schedule(); });
+}
+
+$("btnResetLogo").onclick = () => {
+  logo = null; logoDataUrl = null;
+  saveLogo(null);
+  $("logoIn").value = "";
+  applyDefaultLogo();
+};
+
+// ---- ملف المشروع ----
+$("btnExportProj").onclick = () => {
+  const project = {
+    app: "activity-report",
+    version: 1,
+    data: collectFields(),
+    logo: logoDataUrl,
+    photos: photoData
+  };
+  const blob = new Blob([JSON.stringify(project)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  download(url, fileBase() + " - مشروع.json");
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+};
+
+$("btnImportProj").onclick = () => $("projIn").click();
+
+$("projIn").addEventListener("change", async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    const p = JSON.parse(await f.text());
+    if (p.app !== "activity-report" || !p.data) throw new Error("bad file");
+    applyFields(p.data);
+    if (p.logo) {
+      logoDataUrl = p.logo;
+      saveLogo(p.logo);
+      logo = trimLogo(await loadImage(p.logo));
+    }
+    for (let i = 0; i < 4; i++) {
+      const u = (p.photos && p.photos[i]) || null;
+      await setPhoto(i, u);
+    }
+    saveData();
+    onTextChange();
+    alert("تم استيراد المشروع بنجاح.");
+  } catch (err) {
+    alert("تعذّر فتح الملف. تأكد أنه ملف مشروع صحيح صادر من هذه الأداة.");
+  }
+  e.target.value = "";
 });
 
 // ---- التصدير ----
@@ -470,15 +685,19 @@ $("btnShare").onclick = async () => {
 };
 
 // ---- بدء التشغيل ----
+rebuildDeptSelect();
 restoreData();
-$("deptOther").classList.toggle("hidden", $("dept").value !== "أخرى");
+syncUI();
 
 try {
-  const savedLogo = localStorage.getItem(STORE_KEY + "_logo");
+  const savedLogo = localStorage.getItem(LOGO_KEY);
   if (savedLogo) {
-    loadImage(savedLogo).then(img => { logo = trimLogo(img); schedule(); });
+    logoDataUrl = savedLogo;
+    loadImage(savedLogo).then(img => { logo = trimLogo(img); schedule(); }).catch(() => applyDefaultLogo());
+  } else {
+    applyDefaultLogo();
   }
-} catch (e) {}
+} catch (e) { applyDefaultLogo(); }
 
 if (document.fonts) {
   Promise.all([
